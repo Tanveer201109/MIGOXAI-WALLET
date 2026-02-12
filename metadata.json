@@ -1,0 +1,9 @@
+{
+  "name": "OmniGenius AI Hub",
+  "description": "A comprehensive AI suite featuring real-time voice conversation, advanced image editing, high-quality video generation with Veo, and deep-thinking grounded chat.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone",
+    "geolocation"
+  ]
+}

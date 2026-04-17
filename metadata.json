@@ -1,9 +1,10 @@
 {
-  "name": "OmniGenius AI Hub",
-  "description": "A comprehensive AI suite featuring real-time voice conversation, advanced image editing, high-quality video generation with Veo, and deep-thinking grounded chat.",
+  "name": "MIGOXAI Quantum Hub",
+  "description": "Hard-secure AI ecosystem featuring neural chat, vocal links, video generation, and quantum asset management.",
   "requestFramePermissions": [
     "camera",
     "microphone",
     "geolocation"
-  ]
+  ],
+  "majorCapabilities": []
 }

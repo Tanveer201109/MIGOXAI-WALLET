@@ -6,7 +6,10 @@ export enum AppView {
   VIDEO_ANALYZE = 'video_analyze',
   AUDIO_TRANSCRIBE = 'audio_transcribe',
   CHAT = 'chat',
-  MAPS = 'maps'
+  MAPS = 'maps',
+  WALLET = 'wallet',
+  RPC_ENDPOINTS = 'rpc_endpoints',
+  ADMIN = 'admin'
 }
 
 export interface ChatMessage {

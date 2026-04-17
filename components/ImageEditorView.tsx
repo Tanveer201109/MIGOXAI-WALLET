@@ -46,29 +46,29 @@ const ImageEditorView: React.FC = () => {
       }
     } catch (error) {
       console.error('Image edit failed:', error);
-      alert('Failed to edit image. Ensure you are using a supported image type.');
+      alert('SYSTEM ERROR: VISUAL SYNTHESIS FAILED.');
     } finally {
       setIsProcessing(false);
     }
   };
 
   return (
-    <div className="flex flex-col h-full gap-6">
-      <header>
-        <h2 className="text-2xl font-bold text-white">GenAI Image Editor</h2>
-        <p className="text-slate-400">Describe changes to your image using Gemini 2.5 Flash Image.</p>
+    <div className="flex flex-col h-full gap-8 animate-fade-in">
+      <header className="flex flex-col gap-1">
+        <h2 className="text-4xl font-black radium-text uppercase italic tracking-tighter">Nano Editor</h2>
+        <p className="text-slate-500 font-bold tracking-[0.4em] text-[10px] uppercase ml-1">Generative Image Node // Gemini 2.5 Flash Visual</p>
       </header>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 flex-1 min-h-0">
-        <div className="glass-panel rounded-2xl p-4 flex flex-col gap-4 overflow-hidden">
-          <h3 className="text-sm font-semibold uppercase tracking-wider text-slate-500">Source Image</h3>
-          <div className="flex-1 bg-slate-900/50 rounded-xl border border-dashed border-slate-700 flex items-center justify-center relative group overflow-hidden">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 flex-1 min-h-0">
+        <div className="glass-panel rounded-[2.5rem] p-8 flex flex-col gap-6 border border-[#39ff14]/10 shadow-inner relative overflow-hidden group">
+          <h3 className="text-[10px] font-black text-green-800 uppercase tracking-[0.3em] mb-2">Primary Input</h3>
+          <div className="flex-1 bg-black/40 rounded-3xl border-2 border-dashed border-green-900/20 flex items-center justify-center relative hover:border-[#39ff14]/40 transition-all cursor-pointer overflow-hidden">
             {originalImage ? (
               <img src={originalImage} alt="Source" className="max-w-full max-h-full object-contain" />
             ) : (
-              <div className="text-center p-6">
-                <p className="text-4xl mb-4">🖼️</p>
-                <p className="text-slate-400">Click to upload or drag an image</p>
+              <div className="text-center p-10 opacity-30">
+                <p className="text-7xl mb-6">🎞️</p>
+                <p className="text-lg font-black tracking-widest">DRAG IMAGE OR CLICK</p>
               </div>
             )}
             <input 
@@ -80,37 +80,39 @@ const ImageEditorView: React.FC = () => {
           </div>
         </div>
 
-        <div className="glass-panel rounded-2xl p-4 flex flex-col gap-4 overflow-hidden">
-          <h3 className="text-sm font-semibold uppercase tracking-wider text-slate-500">Preview Result</h3>
-          <div className="flex-1 bg-slate-900/50 rounded-xl border border-slate-800 flex items-center justify-center">
+        <div className="glass-panel rounded-[2.5rem] p-8 flex flex-col gap-6 border border-[#39ff14]/10 shadow-inner relative overflow-hidden">
+          <h3 className="text-[10px] font-black text-green-800 uppercase tracking-[0.3em] mb-2">Synthesized Result</h3>
+          <div className="flex-1 bg-black/60 rounded-3xl border border-slate-900 flex items-center justify-center relative">
             {isProcessing ? (
-              <div className="flex flex-col items-center gap-4">
-                <div className="w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
-                <p className="text-indigo-400 font-medium">Processing your vision...</p>
+              <div className="flex flex-col items-center gap-6">
+                <div className="w-16 h-16 border-4 border-[#39ff14] border-t-transparent rounded-full animate-spin shadow-[0_0_20px_rgba(57,255,20,0.4)]"></div>
+                <p className="radium-text font-black uppercase tracking-widest text-sm animate-pulse">Processing Pixels...</p>
               </div>
             ) : editedImage ? (
-              <img src={editedImage} alt="Edited Result" className="max-w-full max-h-full object-contain" />
+              <img src={editedImage} alt="Edited Result" className="max-w-full max-h-full object-contain radium-glow" />
             ) : (
-              <p className="text-slate-600">Enter a prompt and click "Apply Edit"</p>
+              <div className="text-center p-10 opacity-20 italic font-medium">
+                Awaiting Command...
+              </div>
             )}
           </div>
         </div>
       </div>
 
-      <div className="bg-slate-900 p-4 rounded-2xl border border-slate-800 flex flex-col md:flex-row gap-4">
+      <div className="bg-black/80 p-5 rounded-[2.5rem] border border-[#39ff14]/20 flex flex-col md:flex-row gap-5 radium-glow">
         <input 
           type="text" 
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
-          placeholder="e.g., 'Add a retro 80s filter', 'Make the background a beach', 'Remove the person'"
-          className="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-indigo-500 transition-colors"
+          placeholder="E.G., 'APPLY RADIUM GREEN FILTER', 'REPLACE BACKGROUND WITH CYBERPUNK CITY'..."
+          className="flex-1 bg-transparent border border-slate-900 rounded-2xl px-6 py-4 text-white font-bold mono focus:outline-none focus:border-[#39ff14] transition-all placeholder:text-green-950"
         />
         <button 
           onClick={handleEdit}
           disabled={!originalImage || !prompt || isProcessing}
-          className="bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed text-white px-8 py-3 rounded-xl font-bold transition-all shadow-lg active:scale-95 whitespace-nowrap"
+          className="bg-[#39ff14] hover:bg-white disabled:opacity-10 text-black px-12 py-4 rounded-[1.5rem] font-black transition-all active:scale-95 uppercase tracking-widest text-sm shadow-[0_0_20px_rgba(57,255,20,0.6)]"
         >
-          Apply Edit
+          Execute Edit
         </button>
       </div>
     </div>

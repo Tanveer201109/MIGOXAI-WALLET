@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Shield, Zap, Key, Plus, LogIn, Lock, Wallet, Activity, ArrowRight, RefreshCcw } from 'lucide-react';
 
-type WalletTab = 'PORTFOLIO' | 'SWAP' | 'BRIDGE' | 'STAKE';
+type WalletTab = 'PORTFOLIO' | 'EXCHANGE' | 'SWAP' | 'BRIDGE' | 'STAKE';
 type ConnectionStep = 'IDLE' | 'INITIALIZING' | 'GENERATING' | 'RECOVERING' | 'GEN_CHOICE' | 'SEED_REVEAL' | 'CONNECTED';
 
 const MNEMONIC_WORDS = [
@@ -21,12 +21,15 @@ const WalletView: React.FC = () => {
   const [mnemonic, setMnemonic] = useState<string[]>([]);
   const [phraseLength, setPhraseLength] = useState<12 | 24>(12);
   
-  const [balance] = useState({
+  const [balance, setBalance] = useState({
     btc: "1.245082",
     xai: "250,450.00",
     goai: "500,000.00",
     microai: "1,200,000.00",
     xchain: "882,400.00",
+    eth: "12.45",
+    sol: "450.20",
+    usdt: "142,654.20",
     usd: "182,450.20"
   });
 
@@ -34,6 +37,9 @@ const WalletView: React.FC = () => {
     { name: "xAi", symbol: "xAI", chain: "X-Chain", amount: balance.xai, value: "$22,450.15", color: "text-[#39ff14]", icon: "🧠", glow: "shadow-[0_0_15px_rgba(57,255,20,0.4)]", contract: "0x882...xAi" },
     { name: "GOAI", symbol: "GOAI", chain: "Google Chain", amount: balance.goai, value: "$45,210.00", color: "text-white", icon: "G", glow: "shadow-[0_0_10px_white]", contract: "0xG0A...Chain" },
     { name: "MiCROAI", symbol: "MAI", chain: "Microsoft Chain", amount: balance.microai, value: "$28,761.00", color: "text-blue-400", icon: "⊞", glow: "shadow-[0_0_10px_rgba(96,165,250,0.4)]", contract: "0xMSFT...Core" },
+    { name: "Ethereum", symbol: "ETH", chain: "Mainnet", amount: balance.eth, value: "$42,120.00", color: "text-blue-200", icon: "Ξ", glow: "", contract: "0x742...Eth" },
+    { name: "Solana", symbol: "SOL", chain: "Solana", amount: balance.sol, value: "$64,210.00", color: "text-purple-400", icon: "S", glow: "", contract: "Native" },
+    { name: "Tether", symbol: "USDT", chain: "Poly", amount: balance.usdt, value: "$142,654.20", color: "text-green-400", icon: "$", glow: "", contract: "0xdAC...USDT" },
     { name: "Bitcoin", symbol: "BTC", chain: "Legacy", amount: balance.btc, value: "$84,210.00", color: "text-orange-500", icon: "₿", glow: "", contract: "Native" },
   ];
 
@@ -336,7 +342,7 @@ const WalletView: React.FC = () => {
           </div>
           
           <div className="flex bg-black border border-slate-800 rounded-xl p-1 shadow-2xl">
-            {['PORTFOLIO', 'SWAP', 'BRIDGE', 'STAKE'].map((tab) => (
+            {['PORTFOLIO', 'EXCHANGE', 'SWAP', 'BRIDGE', 'STAKE'].map((tab) => (
               <button 
                 key={tab}
                 onClick={() => setActiveTab(tab as WalletTab)}
@@ -348,11 +354,17 @@ const WalletView: React.FC = () => {
           </div>
         </div>
         <div className="flex items-center gap-4 mt-2">
-          <p className="text-slate-500 font-bold tracking-[0.3em] text-[10px] uppercase ml-1">Quantum-Encrypted Asset Hub | v4.5.0-STABLE</p>
+          <p className="text-slate-500 font-bold tracking-[0.3em] text-[10px] uppercase ml-1">Quantum-Encrypted Asset Hub | v4.6.0-STABLE</p>
           <div className="h-px flex-1 bg-green-900/20" />
-          <div className="flex items-center gap-2 bg-black/40 px-3 py-1 rounded-lg border border-green-900/20">
-             <div className="w-1.5 h-1.5 bg-[#39ff14] rounded-full" />
-             <span className="text-[9px] font-black text-slate-400 mono">{walletAddress}</span>
+          <div className="flex flex-col items-end gap-1">
+            <div className="flex items-center gap-2 bg-black/40 px-3 py-1 rounded-lg border border-green-900/20 shadow-[0_0_10px_rgba(57,255,20,0.05)]">
+              <div className="w-1.5 h-1.5 bg-[#39ff14] rounded-full" />
+              <span className="text-[9px] font-black text-slate-400 mono">{walletAddress}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-[7px] font-black text-slate-600 uppercase tracking-widest">ID Hash:</span>
+              <span className="text-[7px] font-mono text-slate-700 opacity-80">SHA256: 0x8284...F91E</span>
+            </div>
           </div>
         </div>
       </header>
@@ -478,6 +490,129 @@ const WalletView: React.FC = () => {
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      )}
+
+      {activeTab === 'EXCHANGE' && (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 h-full pb-10 animate-fade-in">
+          <div className="glass-panel p-12 rounded-[3.5rem] border border-[#39ff14]/20 bg-black/60 flex flex-col gap-10">
+            <div>
+              <h3 className="text-3xl font-black radium-text uppercase italic tracking-tighter mb-2">Fiat Gateway</h3>
+              <p className="text-slate-500 text-[10px] font-black uppercase tracking-[0.4em]">Buy & Sell Neural Assets Globally</p>
+            </div>
+
+            <div className="flex gap-4">
+              <button className="flex-1 py-4 bg-[#39ff14] text-black font-black rounded-2xl uppercase tracking-widest text-xs shadow-lg shadow-green-500/20 transition-all active:scale-95">Buy</button>
+              <button className="flex-1 py-4 bg-transparent border-2 border-red-900/40 text-red-500 font-black rounded-2xl uppercase tracking-widest text-xs hover:bg-red-500/10 transition-all active:scale-95">Sell</button>
+            </div>
+
+            <div className="space-y-6">
+              <div className="bg-black/80 p-6 rounded-2xl border border-green-900/30">
+                <p className="text-[10px] font-black text-slate-500 uppercase mb-4">You Pay</p>
+                <div className="flex justify-between items-center">
+                  <input type="text" placeholder="5,000" className="bg-transparent text-3xl font-black text-white focus:outline-none w-1/2 mono" />
+                  <div className="flex items-center gap-2 bg-slate-900 px-4 py-2 rounded-xl border border-slate-800">
+                    <span className="text-xs font-black text-white">BDT</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex justify-center -my-4 relative z-10">
+                 <div className="w-10 h-10 bg-[#39ff14] rounded-full flex items-center justify-center text-black shadow-lg shadow-green-500/40 border-4 border-black">
+                   <RefreshCcw size={16} />
+                 </div>
+              </div>
+
+              <div className="bg-black/80 p-6 rounded-2xl border border-green-900/30">
+                <p className="text-[10px] font-black text-slate-500 uppercase mb-4">You Receive</p>
+                <div className="flex justify-between items-center">
+                  <input type="text" readOnly value="142.50" className="bg-transparent text-3xl font-black text-[#39ff14] focus:outline-none w-1/2 mono" />
+                  <select className="bg-slate-900 text-[10px] font-black px-4 py-2 rounded-xl border border-slate-800 text-[#39ff14] outline-none">
+                    <option>xAI</option>
+                    <option>ETH</option>
+                    <option>USDT</option>
+                    <option>BNB</option>
+                    <option>SOL</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <p className="text-[10px] font-black text-slate-600 uppercase tracking-widest">Select Payment Method</p>
+              <div className="grid grid-cols-3 gap-4">
+                <button className="flex flex-col items-center gap-3 p-4 bg-[#D12053]/10 border-2 border-[#D12053]/30 rounded-2xl hover:border-[#D12053] transition-all group">
+                  <div className="w-12 h-12 rounded-xl bg-[#D12053] flex items-center justify-center shadow-lg shadow-[#D12053]/30 group-hover:scale-110 transition-transform">
+                    <span className="text-white font-black text-xs">bKash</span>
+                  </div>
+                  <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest">bKash</span>
+                </button>
+                <button className="flex flex-col items-center gap-3 p-4 bg-[#F7931A]/10 border-2 border-[#F7931A]/30 rounded-2xl hover:border-[#F7931A] transition-all group">
+                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#F7931A] to-orange-600 flex items-center justify-center shadow-lg shadow-orange-500/30 group-hover:scale-110 transition-transform">
+                    <span className="text-white font-black text-xs">Nagad</span>
+                  </div>
+                  <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest">Nagad</span>
+                </button>
+                <button className="flex flex-col items-center gap-3 p-4 bg-[#005CAB]/10 border-2 border-[#005CAB]/30 rounded-2xl hover:border-[#005CAB] transition-all group">
+                  <div className="w-12 h-12 rounded-xl bg-[#005CAB] flex items-center justify-center shadow-lg shadow-blue-500/30 group-hover:scale-110 transition-transform">
+                    <span className="text-white font-black text-xs uppercase italic">Upay</span>
+                  </div>
+                  <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest">Upay</span>
+                </button>
+              </div>
+            </div>
+
+            <button 
+              onClick={handleAction}
+              disabled={isProcessing}
+              className="w-full bg-[#39ff14] text-black font-black py-6 rounded-2xl hover:bg-white transition-all uppercase tracking-[0.2em] text-sm shadow-[0_0_30px_rgba(57,255,20,0.4)] disabled:opacity-50"
+            >
+              {isProcessing ? 'SCANNING PAYMENT NETWORK...' : 'INITIATE PURCHASE'}
+            </button>
+          </div>
+
+          <div className="glass-panel p-10 rounded-[3.5rem] border border-slate-800 bg-black/40 flex flex-col gap-6 overflow-hidden">
+             <div className="flex justify-between items-center mb-4">
+                <h3 className="text-xs font-black text-slate-500 uppercase tracking-[0.4em]">CoinMarketCap Pulse</h3>
+                <div className="flex items-center gap-2 px-3 py-1 bg-green-500/10 border border-green-500/20 rounded-full">
+                  <Activity size={12} className="text-[#39ff14] animate-pulse" />
+                  <span className="text-[8px] font-black text-[#39ff14] uppercase">Live Feeds</span>
+                </div>
+             </div>
+
+             <div className="space-y-4 overflow-y-auto max-h-[600px] pr-2 custom-scroll">
+                {[
+                  { rank: 1, name: "Bitcoin", sym: "BTC", price: "$64,210.45", change: "+2.4%", color: "text-orange-500" },
+                  { rank: 2, name: "Ethereum", sym: "ETH", price: "$3,450.12", change: "+1.8%", color: "text-blue-300" },
+                  { rank: 3, name: "xAi Neural", sym: "xAI", price: "$0.08942", change: "+12.5%", color: "text-[#39ff14]" },
+                  { rank: 4, name: "Solana", sym: "SOL", price: "$142.45", change: "-0.5%", color: "text-purple-400" },
+                  { rank: 5, name: "Tether", sym: "USDT", price: "$1.00", change: "0.0%", color: "text-green-500" },
+                  { rank: 6, name: "BNB", sym: "BNB", price: "$584.20", change: "+3.1%", color: "text-yellow-500" },
+                  { rank: 7, name: "XRP", sym: "XRP", price: "$0.6214", change: "-1.2%", color: "text-blue-500" },
+                  { rank: 8, name: "Avalanche", sym: "AVAX", price: "$42.15", change: "+0.8%", color: "text-red-500" },
+                ].map((coin) => (
+                  <div key={coin.rank} className="flex items-center justify-between p-5 bg-black/40 border border-slate-900 rounded-2xl hover:border-slate-700 transition-all group cursor-pointer">
+                    <div className="flex items-center gap-4">
+                      <span className="text-[10px] font-black text-slate-800 mono">#{coin.rank}</span>
+                      <div>
+                        <p className="text-sm font-black text-white uppercase tracking-tight group-hover:text-[#39ff14] transition-colors">{coin.name}</p>
+                        <p className="text-[9px] font-bold text-slate-600 uppercase tracking-widest">{coin.sym}</p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-sm font-black text-white mono">{coin.price}</p>
+                      <p className={`text-[9px] font-black mono ${coin.change.startsWith('+') ? 'text-green-500' : coin.change === '0.0%' ? 'text-slate-500' : 'text-red-500'}`}>{coin.change}</p>
+                    </div>
+                  </div>
+                ))}
+             </div>
+
+             <div className="mt-auto p-8 border-2 border-dashed border-slate-900 rounded-3xl bg-black/20">
+                <p className="text-[9px] font-black text-slate-700 uppercase tracking-[0.3em] text-center leading-loose">
+                  NEURAL EXCHANGE INTEGRATION: ALL LISTED CURRENCIES ON COINMARKETCAP ARE COMPATIBLE WITH THE X-CHAIN TUNNEL ROUTING SYSTEM.
+                </p>
+             </div>
           </div>
         </div>
       )}

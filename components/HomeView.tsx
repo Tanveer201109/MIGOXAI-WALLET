@@ -1,7 +1,7 @@
 
-import React from 'react';
-import { motion } from 'motion/react';
-import { Shield, Zap, Globe, Cpu, UserPlus, LogIn, Mail } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
+import { Shield, Zap, Globe, Cpu, UserPlus, LogIn } from 'lucide-react';
 
 interface HomeViewProps {
   onLogin: () => void;
@@ -9,8 +9,66 @@ interface HomeViewProps {
 }
 
 const HomeView: React.FC<HomeViewProps> = ({ onLogin, onLegal }) => {
+  const [showSplash, setShowSplash] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowSplash(false);
+    }, 2800);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-6 relative overflow-hidden bg-black/40">
+      <AnimatePresence>
+        {showSplash && (
+          <motion.div 
+            key="splash"
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.8, ease: "easeInOut" }}
+            className="fixed inset-0 z-[100] bg-black flex flex-col items-center justify-center"
+          >
+            {/* Neural Glow Core */}
+            <div className="relative mb-24 scale-125">
+              <div 
+                className="w-20 h-40 bg-[#39ff14]/20 rounded-full blur-[45px] animate-pulse" 
+              />
+              <div 
+                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-32 bg-[#39ff14] rounded-full blur-[20px] opacity-80" 
+              />
+              <div 
+                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-24 bg-white/40 rounded-full blur-[10px]" 
+              />
+            </div>
+
+            {/* Typography */}
+            <div className="text-center">
+              <motion.h1 
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5, duration: 1 }}
+                className="text-7xl font-sans font-light text-white tracking-[0.2em] mb-4"
+              >
+                XAI
+              </motion.h1>
+              <motion.p 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.8, duration: 1 }}
+                className="text-sm font-sans font-extralight text-slate-500 tracking-[1.2em] uppercase ml-[1.2em]"
+              >
+                Wallet
+              </motion.p>
+            </div>
+
+            <div className="absolute bottom-12 text-[8px] font-black text-slate-900 tracking-[1em] uppercase animate-pulse">
+              Initializing Quantum Backbone
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Background Decorative Elements */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[#39ff14]/5 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute top-0 right-0 w-96 h-96 bg-green-900/10 rounded-full blur-[100px] pointer-events-none" />

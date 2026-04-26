@@ -13,13 +13,20 @@ MIGOXAI is a non-custodial application. We NEVER store your private keys, seed p
 ## 3. Data Processing
 We use Google Gemini AI for processing neural requests. Your data is sent to Google's API for real-time analysis but is not used for training models unless you opt-in through Google's own service agreements.
 
-## 4. Third-Party Services
+## 4. Multi-Chain & Cross-Platform Integration
+MIGOXAI supports multiple blockchain networks, including but not limited to **X-Chain**, **Google Chain**, **Microsoft Chain**, **Ethereum**, and **Solana**. 
+
+- **Cross-Chain Transparency:** When you initiate a bridge or swap across different platforms, transaction data (wallet address and amount) is broadcast to the respective public ledgers of each chain.
+- **Platform Integrity:** We coordinate with partner infrastructure (Google Cloud, Microsoft Azure) to ensure compute-level privacy, but public chain data remains immutable and accessible.
+
+## 5. Third-Party Services
 We integrate with:
 - **Google GenAI:** For AI capabilities.
 - **MetaMask/Web3 Providers:** For blockchain interactions.
 - **Vercel/Cloud Run:** For hosting and infrastructure.
+- **CoinMarketCap:** For real-time asset pricing.
 
-## 5. Security
+## 6. Security
 We implement "Quantum Stealth" protocols and neural filtering to obfuscate traffic and protect user integrity. However, you are responsible for the safety of your own seed phrases.
 
 ---

@@ -11,9 +11,10 @@ import AudioTranscribeView from './components/AudioTranscribeView';
 import WalletView from './components/WalletView';
 import RpcEndpointsView from './components/RpcEndpointsView';
 import AdminPanelView from './components/AdminPanelView';
+import HomeView from './components/HomeView';
 
 const App: React.FC = () => {
-  const [activeView, setActiveView] = useState<AppView>(AppView.ADMIN);
+  const [activeView, setActiveView] = useState<AppView>(AppView.HOME);
 
   const navItems = [
     { id: AppView.ADMIN, label: 'Admin Hub', icon: '⚡' },
@@ -40,9 +41,14 @@ const App: React.FC = () => {
       case AppView.AUDIO_TRANSCRIBE: return <AudioTranscribeView />;
       case AppView.CHAT: return <ChatBotView />;
       case AppView.MAPS: return <MapsGroundingView />;
+      case AppView.HOME: return <HomeView onLogin={() => setActiveView(AppView.ADMIN)} />;
       default: return <AdminPanelView />;
     }
   };
+
+  if (activeView === AppView.HOME) {
+    return <HomeView onLogin={() => setActiveView(AppView.ADMIN)} />;
+  }
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen relative overflow-hidden">

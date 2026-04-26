@@ -1,11 +1,18 @@
 
 import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
+import { Shield, Zap, Key, Plus, LogIn, Lock, Wallet, Activity, ArrowRight, RefreshCcw } from 'lucide-react';
 
 type WalletTab = 'PORTFOLIO' | 'SWAP' | 'BRIDGE' | 'STAKE';
+type ConnectionStep = 'IDLE' | 'INITIALIZING' | 'GENERATING' | 'RECOVERING' | 'KEY_REVEAL' | 'CONNECTED';
 
 const WalletView: React.FC = () => {
   const [activeTab, setActiveTab] = useState<WalletTab>('PORTFOLIO');
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isConnected, setIsConnected] = useState(false);
+  const [connectionStep, setConnectionStep] = useState<ConnectionStep>('IDLE');
+  const [walletAddress, setWalletAddress] = useState<string | null>(null);
+  const [privateKey, setPrivateKey] = useState<string | null>(null);
   
   const [balance] = useState({
     btc: "1.245082",
@@ -28,6 +35,29 @@ const WalletView: React.FC = () => {
     { type: "STAKED", asset: "MICRO", amount: "-100,000.00", status: "LOCKED", date: "2023.10.22" },
   ];
 
+  const handleConnect = (type: 'NEW' | 'IMPORT' | 'METAMASK' | 'GOOGLE') => {
+    setConnectionStep(type === 'IMPORT' ? 'RECOVERING' : 'GENERATING');
+    
+    // Auto-generate keys
+    const genKey = 'MIGO-' + Math.random().toString(36).substring(2, 12).toUpperCase() + '-' + Math.random().toString(36).substring(2, 12).toUpperCase();
+    const genAddr = '0xMIGO' + Math.random().toString(16).slice(2, 10).toUpperCase();
+
+    setTimeout(() => {
+      setConnectionStep('INITIALIZING');
+    }, 1200);
+
+    setTimeout(() => {
+      setPrivateKey(genKey);
+      setWalletAddress(genAddr);
+      setConnectionStep('KEY_REVEAL');
+    }, 2800);
+  };
+
+  const finalizeConnection = () => {
+    setIsConnected(true);
+    setConnectionStep('CONNECTED');
+  };
+
   const handleAction = () => {
     setIsProcessing(true);
     setTimeout(() => {
@@ -35,6 +65,178 @@ const WalletView: React.FC = () => {
       alert("QUANTUM TRANSACTION COMMITTED: ANS=CORRECT");
     }, 2000);
   };
+
+  if (!isConnected) {
+    return (
+      <div className="h-full flex items-center justify-center animate-fade-in p-6">
+        <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-8">
+           <div className="flex flex-col justify-center gap-6">
+             <div className="flex items-center gap-4 mb-4">
+                <div className="w-16 h-16 bg-black border-2 border-[#39ff14] rounded-2xl flex items-center justify-center text-4xl shadow-[0_0_30px_rgba(57,255,20,0.4)] radium-glow animate-pulse">
+                  💳
+                </div>
+                <div>
+                  <h2 className="text-5xl font-black radium-text uppercase italic tracking-tighter leading-none">Quantum Wallet</h2>
+                  <p className="text-slate-500 font-bold tracking-[0.3em] text-[10px] uppercase mt-1">Status: NOT ACTIVE</p>
+                </div>
+             </div>
+             <p className="text-slate-400 text-sm font-medium leading-relaxed max-w-sm mb-6">
+               Initialize your secure link to the MIGOXAI backbone. Managed via quantum-encrypted neural signatures. No seed phrase required.
+             </p>
+             
+             <div className="grid grid-cols-1 gap-4">
+                <button 
+                  onClick={() => handleConnect('NEW')}
+                  disabled={connectionStep !== 'IDLE'}
+                  className="w-full group flex items-center justify-between bg-black/60 border border-green-900/30 p-6 rounded-3xl hover:border-[#39ff14] hover:bg-[#39ff14]/5 transition-all text-left relative overflow-hidden"
+                >
+                  <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-20 transition-opacity">
+                    <Plus size={60} className="text-[#39ff14]" />
+                  </div>
+                  <div className="flex items-center gap-4 relative z-10">
+                    <div className="w-10 h-10 rounded-xl bg-green-950/30 flex items-center justify-center text-[#39ff14] group-hover:bg-[#39ff14] group-hover:text-black transition-colors">
+                      <Plus size={20} />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-black text-white uppercase tracking-tight">Create New Node</h3>
+                      <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest mt-0.5">Generate Unique Neural Signature</p>
+                    </div>
+                  </div>
+                  <ArrowRight className="text-green-900 group-hover:text-[#39ff14] transform group-hover:translate-x-2 transition-all" size={16} />
+                </button>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <button 
+                    onClick={() => handleConnect('METAMASK')}
+                    disabled={connectionStep !== 'IDLE'}
+                    className="group bg-black/60 border border-amber-900/30 p-6 rounded-3xl hover:border-amber-500 hover:bg-amber-500/5 transition-all text-left relative overflow-hidden"
+                  >
+                    <div className="flex flex-col gap-4">
+                      <div className="w-10 h-10 rounded-xl bg-amber-950/30 flex items-center justify-center text-amber-500 group-hover:bg-amber-500 group-hover:text-black transition-colors">
+                        <span className="text-xl">🦊</span>
+                      </div>
+                      <div>
+                        <h4 className="text-sm font-black text-white uppercase tracking-tight">MetaMask</h4>
+                        <p className="text-[8px] font-black text-slate-500 uppercase tracking-widest mt-0.5">Connect Browser Web3</p>
+                      </div>
+                    </div>
+                  </button>
+
+                  <button 
+                    onClick={() => handleConnect('GOOGLE')}
+                    disabled={connectionStep !== 'IDLE'}
+                    className="group bg-black/60 border border-slate-700/30 p-6 rounded-3xl hover:border-white hover:bg-white/5 transition-all text-left relative overflow-hidden"
+                  >
+                    <div className="flex flex-col gap-4">
+                      <div className="w-10 h-10 rounded-xl bg-slate-900 flex items-center justify-center text-white group-hover:bg-white group-hover:text-black transition-colors">
+                        <span className="text-xl">G</span>
+                      </div>
+                      <div>
+                        <h4 className="text-sm font-black text-white uppercase tracking-tight">Google Key</h4>
+                        <p className="text-[8px] font-black text-slate-500 uppercase tracking-widest mt-0.5">Private Key Sync</p>
+                      </div>
+                    </div>
+                  </button>
+                </div>
+
+                <button 
+                  onClick={() => handleConnect('IMPORT')}
+                  disabled={connectionStep !== 'IDLE'}
+                  className="w-full group flex items-center justify-between border border-dashed border-green-900/30 px-6 py-4 rounded-xl hover:border-[#39ff14] transition-all"
+                >
+                  <span className="text-[10px] font-black text-slate-600 uppercase tracking-[0.2em]">Recover Identity Hub</span>
+                  <RefreshCcw size={14} className="text-green-900" />
+                </button>
+             </div>
+           </div>
+
+           <div className="hidden md:flex items-center justify-center">
+             <div className="glass-panel p-12 rounded-[4rem] border border-[#39ff14]/10 bg-black/40 w-full aspect-square flex flex-col items-center justify-center text-center relative overflow-hidden">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(57,255,20,0.05),transparent_70%)]" />
+                
+                <AnimatePresence mode="wait">
+                  {connectionStep === 'IDLE' ? (
+                    <motion.div 
+                      key="idle"
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.8 }}
+                      className="flex flex-col items-center gap-8 relative z-10"
+                    >
+                      <div className="w-32 h-32 rounded-full border border-green-900/20 flex items-center justify-center relative">
+                        <div className="absolute inset-0 border-2 border-[#39ff14]/30 rounded-full animate-ping" />
+                        <Shield size={64} className="text-green-900" />
+                      </div>
+                      <p className="text-xs font-black text-green-950 uppercase tracking-[0.5em]">Network: ISOLATED</p>
+                    </motion.div>
+                  ) : connectionStep === 'KEY_REVEAL' ? (
+                    <motion.div 
+                      key="reveal"
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      className="flex flex-col items-center gap-6 relative z-10 w-full"
+                    >
+                      <div className="w-20 h-20 bg-green-950/30 border-2 border-[#39ff14] rounded-2xl flex items-center justify-center text-[#39ff14] radium-glow mb-4">
+                        <Key size={32} />
+                      </div>
+                      <div className="space-y-4 w-full">
+                        <h3 className="text-xl font-black radium-text uppercase italic tracking-tighter">Identity Signature Ready</h3>
+                        <div className="bg-black/80 border border-[#39ff14]/30 p-6 rounded-2xl relative group">
+                           <p className="text-[8px] font-black text-[#39ff14]/50 uppercase tracking-widest mb-2">Secure Private Key (Copy & Save)</p>
+                           <p className="text-xs font-black text-white mono break-all leading-relaxed">{privateKey}</p>
+                           <div className="absolute inset-0 bg-black blur-sm group-hover:blur-none transition-all flex items-center justify-center cursor-help">
+                              <p className="text-[10px] font-black text-[#39ff14] uppercase tracking-[0.3em]">Hover to Reveal</p>
+                           </div>
+                        </div>
+                        <p className="text-[9px] text-red-900 font-black uppercase tracking-widest leading-loose">
+                          ⚠ WARNING: LOSING THIS KEY MEANS PERMANENT LOSS OF NEURAL ASSETS. NO RECOVERY POSSIBLE ONCE LINKED.
+                        </p>
+                        <button 
+                          onClick={finalizeConnection}
+                          className="w-full bg-[#39ff14] text-black font-black py-4 rounded-xl hover:bg-white transition-all uppercase tracking-widest text-[10px] shadow-[0_0_20px_rgba(57,255,20,0.4)]"
+                        >
+                          I Have Saved My Neural Seed
+                        </button>
+                      </div>
+                    </motion.div>
+                  ) : (
+                    <motion.div 
+                      key="active"
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      className="flex flex-col items-center gap-10 relative z-10"
+                    >
+                      <div className="relative">
+                        <div className="w-48 h-48 border-4 border-dashed border-[#39ff14]/20 rounded-full animate-spin-slow flex items-center justify-center">
+                        </div>
+                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                           <Zap size={80} className="text-[#39ff14] animate-pulse radium-text" />
+                        </div>
+                      </div>
+                      <div className="space-y-4">
+                        <p className="text-2xl font-black radium-text uppercase italic tracking-tighter">
+                          {connectionStep === 'GENERATING' ? 'Generating Key...' : 
+                           connectionStep === 'RECOVERING' ? 'Decrypting Key...' : 
+                           'Initializing Link...'}
+                        </p>
+                        <div className="w-64 h-1 bg-green-950 rounded-full overflow-hidden">
+                           <motion.div 
+                            initial={{ width: 0 }}
+                            animate={{ width: '100%' }}
+                            transition={{ duration: 3.5 }}
+                            className="h-full bg-[#39ff14] shadow-[0_0_10px_#39ff14]"
+                           />
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+             </div>
+           </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col h-full gap-8 animate-fade-in pb-10">
@@ -60,7 +262,14 @@ const WalletView: React.FC = () => {
             ))}
           </div>
         </div>
-        <p className="text-slate-500 font-bold tracking-[0.3em] text-[10px] uppercase ml-1">Quantum-Encrypted Asset Hub | v4.5.0-STABLE</p>
+        <div className="flex items-center gap-4 mt-2">
+          <p className="text-slate-500 font-bold tracking-[0.3em] text-[10px] uppercase ml-1">Quantum-Encrypted Asset Hub | v4.5.0-STABLE</p>
+          <div className="h-px flex-1 bg-green-900/20" />
+          <div className="flex items-center gap-2 bg-black/40 px-3 py-1 rounded-lg border border-green-900/20">
+             <div className="w-1.5 h-1.5 bg-[#39ff14] rounded-full" />
+             <span className="text-[9px] font-black text-slate-400 mono">{walletAddress}</span>
+          </div>
+        </div>
       </header>
 
       {activeTab === 'PORTFOLIO' && (
@@ -127,7 +336,13 @@ const WalletView: React.FC = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 flex-1 min-h-[400px]">
             {/* Asset List */}
             <div className="glass-panel rounded-[2.5rem] p-10 border border-green-900/10 flex flex-col bg-black/20">
-              <h3 className="text-xs font-black text-green-900 uppercase tracking-[0.4em] mb-10">Asset Inventory</h3>
+              <div className="flex justify-between items-center mb-10">
+                <h3 className="text-xs font-black text-green-900 uppercase tracking-[0.4em]">Asset Inventory</h3>
+                <button className="text-[9px] font-black text-slate-500 uppercase flex items-center gap-2 hover:text-white transition-colors">
+                  <RefreshCcw size={10} />
+                  Force Refresh
+                </button>
+              </div>
               <div className="space-y-4 flex-1 overflow-y-auto pr-4 custom-scroll">
                 {tokens.map((token, i) => (
                   <div key={i} className={`flex items-center justify-between p-6 bg-black/40 rounded-[2rem] border border-green-900/10 hover:border-slate-400 transition-all group cursor-pointer relative overflow-hidden ${token.glow}`}>
@@ -226,7 +441,7 @@ const WalletView: React.FC = () => {
                 disabled={isProcessing}
                 className="w-full bg-[#39ff14] text-black font-black py-6 rounded-2xl hover:bg-white transition-all uppercase tracking-[0.2em] text-sm shadow-[0_0_30px_rgba(57,255,20,0.4)] disabled:opacity-50"
                >
-                 {isProcessing ? 'SYNCHRONIZING ATOMIC SWAP...' : 'EXECUTE NEURAL SWAP'}
+                {isProcessing ? 'SYNCHRONIZING ATOMIC SWAP...' : 'EXECUTE NEURAL SWAP'}
                </button>
              </div>
           </div>
@@ -282,7 +497,7 @@ const WalletView: React.FC = () => {
                 disabled={isProcessing}
                 className="w-full bg-cyan-500 text-black font-black py-6 rounded-2xl hover:bg-white transition-all uppercase tracking-[0.2em] text-sm shadow-[0_0_30px_rgba(6,182,212,0.4)]"
                >
-                 {isProcessing ? 'OPENING QUANTUM TUNNEL...' : 'INITIATE BRIDGE TRANSFER'}
+                {isProcessing ? 'OPENING QUANTUM TUNNEL...' : 'INITIATE BRIDGE TRANSFER'}
                </button>
              </div>
           </div>
@@ -323,7 +538,7 @@ const WalletView: React.FC = () => {
               </div>
             </div>
 
-            <div className="glass-panel p-12 rounded-[3rem] border border-slate-800 bg-black/40 flex flex-col">
+            <div className="glass-panel p-12 rounded-[4rem] border border-slate-800 bg-black/40 flex flex-col">
               <h3 className="text-xs font-black text-slate-500 uppercase tracking-[0.4em] mb-10">Yield Projection</h3>
               <div className="flex-1 flex flex-col gap-6">
                 {[

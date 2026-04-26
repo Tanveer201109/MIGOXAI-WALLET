@@ -4,7 +4,13 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Shield, Zap, Key, Plus, LogIn, Lock, Wallet, Activity, ArrowRight, RefreshCcw } from 'lucide-react';
 
 type WalletTab = 'PORTFOLIO' | 'SWAP' | 'BRIDGE' | 'STAKE';
-type ConnectionStep = 'IDLE' | 'INITIALIZING' | 'GENERATING' | 'RECOVERING' | 'KEY_REVEAL' | 'CONNECTED';
+type ConnectionStep = 'IDLE' | 'INITIALIZING' | 'GENERATING' | 'RECOVERING' | 'GEN_CHOICE' | 'SEED_REVEAL' | 'CONNECTED';
+
+const MNEMONIC_WORDS = [
+  "alpha", "bravo", "charlie", "delta", "echo", "foxtrot", "golf", "hotel", "india", "juliet", "kilo", "lima",
+  "mike", "november", "oscar", "papa", "quebec", "romeo", "sierra", "tango", "uniform", "victor", "whiskey", "xray",
+  "yankee", "zulu", "quantum", "neural", "cipher", "matrix", "nexus", "atomic", "plasma", "pulse", "beacon", "vector"
+];
 
 const WalletView: React.FC = () => {
   const [activeTab, setActiveTab] = useState<WalletTab>('PORTFOLIO');
@@ -12,7 +18,8 @@ const WalletView: React.FC = () => {
   const [isConnected, setIsConnected] = useState(false);
   const [connectionStep, setConnectionStep] = useState<ConnectionStep>('IDLE');
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
-  const [privateKey, setPrivateKey] = useState<string | null>(null);
+  const [mnemonic, setMnemonic] = useState<string[]>([]);
+  const [phraseLength, setPhraseLength] = useState<12 | 24>(12);
   
   const [balance] = useState({
     btc: "1.245082",
@@ -35,11 +42,14 @@ const WalletView: React.FC = () => {
     { type: "STAKED", asset: "MICRO", amount: "-100,000.00", status: "LOCKED", date: "2023.10.22" },
   ];
 
-  const handleConnect = (type: 'NEW' | 'IMPORT' | 'METAMASK' | 'GOOGLE') => {
+  const handleConnect = (type: 'NEW' | 'IMPORT' | 'METAMASK' | 'GOOGLE' | 'MICROSOFT') => {
+    if (type === 'NEW') {
+      setConnectionStep('GEN_CHOICE');
+      return;
+    }
+    
     setConnectionStep(type === 'IMPORT' ? 'RECOVERING' : 'GENERATING');
     
-    // Auto-generate keys
-    const genKey = 'MIGO-' + Math.random().toString(36).substring(2, 12).toUpperCase() + '-' + Math.random().toString(36).substring(2, 12).toUpperCase();
     const genAddr = '0xMIGO' + Math.random().toString(16).slice(2, 10).toUpperCase();
 
     setTimeout(() => {
@@ -47,10 +57,29 @@ const WalletView: React.FC = () => {
     }, 1200);
 
     setTimeout(() => {
-      setPrivateKey(genKey);
       setWalletAddress(genAddr);
-      setConnectionStep('KEY_REVEAL');
+      if (type === 'IMPORT') {
+        finalizeConnection();
+      } else {
+        generateMnemonic(12); // Default for social logins
+      }
     }, 2800);
+  };
+
+  const generateMnemonic = (length: 12 | 24) => {
+    setConnectionStep('GENERATING');
+    setPhraseLength(length);
+    
+    const words: string[] = [];
+    for (let i = 0; i < length; i++) {
+      words.push(MNEMONIC_WORDS[Math.floor(Math.random() * MNEMONIC_WORDS.length)]);
+    }
+    
+    setTimeout(() => {
+      setMnemonic(words);
+      setWalletAddress('0xMIGO' + Math.random().toString(16).slice(2, 10).toUpperCase());
+      setConnectionStep('SEED_REVEAL');
+    }, 2000);
   };
 
   const finalizeConnection = () => {
@@ -105,36 +134,43 @@ const WalletView: React.FC = () => {
                   <ArrowRight className="text-green-900 group-hover:text-[#39ff14] transform group-hover:translate-x-2 transition-all" size={16} />
                 </button>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-3 gap-3">
                   <button 
                     onClick={() => handleConnect('METAMASK')}
                     disabled={connectionStep !== 'IDLE'}
-                    className="group bg-black/60 border border-amber-900/30 p-6 rounded-3xl hover:border-amber-500 hover:bg-amber-500/5 transition-all text-left relative overflow-hidden"
+                    className="group bg-black/60 border border-amber-900/30 p-4 rounded-2xl hover:border-amber-500 hover:bg-amber-500/5 transition-all text-center relative overflow-hidden"
                   >
-                    <div className="flex flex-col gap-4">
+                    <div className="flex flex-col items-center gap-2">
                       <div className="w-10 h-10 rounded-xl bg-amber-950/30 flex items-center justify-center text-amber-500 group-hover:bg-amber-500 group-hover:text-black transition-colors">
                         <span className="text-xl">🦊</span>
                       </div>
-                      <div>
-                        <h4 className="text-sm font-black text-white uppercase tracking-tight">MetaMask</h4>
-                        <p className="text-[8px] font-black text-slate-500 uppercase tracking-widest mt-0.5">Connect Browser Web3</p>
-                      </div>
+                      <h4 className="text-[9px] font-black text-white uppercase tracking-tight">MetaMask</h4>
                     </div>
                   </button>
 
                   <button 
                     onClick={() => handleConnect('GOOGLE')}
                     disabled={connectionStep !== 'IDLE'}
-                    className="group bg-black/60 border border-slate-700/30 p-6 rounded-3xl hover:border-white hover:bg-white/5 transition-all text-left relative overflow-hidden"
+                    className="group bg-black/60 border border-slate-700/30 p-4 rounded-2xl hover:border-white hover:bg-white/5 transition-all text-center relative overflow-hidden"
                   >
-                    <div className="flex flex-col gap-4">
+                    <div className="flex flex-col items-center gap-2">
                       <div className="w-10 h-10 rounded-xl bg-slate-900 flex items-center justify-center text-white group-hover:bg-white group-hover:text-black transition-colors">
-                        <span className="text-xl">G</span>
+                        <span className="text-xl font-bold">G</span>
                       </div>
-                      <div>
-                        <h4 className="text-sm font-black text-white uppercase tracking-tight">Google Key</h4>
-                        <p className="text-[8px] font-black text-slate-500 uppercase tracking-widest mt-0.5">Private Key Sync</p>
+                      <h4 className="text-[9px] font-black text-white uppercase tracking-tight">Google</h4>
+                    </div>
+                  </button>
+
+                  <button 
+                    onClick={() => handleConnect('MICROSOFT')}
+                    disabled={connectionStep !== 'IDLE'}
+                    className="group bg-black/60 border border-blue-700/30 p-4 rounded-2xl hover:border-blue-400 hover:bg-blue-400/5 transition-all text-center relative overflow-hidden"
+                  >
+                    <div className="flex flex-col items-center gap-2">
+                      <div className="w-10 h-10 rounded-xl bg-blue-950/30 flex items-center justify-center text-blue-400 group-hover:bg-blue-400 group-hover:text-black transition-colors">
+                        <span className="text-xl">⊞</span>
                       </div>
+                      <h4 className="text-[9px] font-black text-white uppercase tracking-tight">Microsoft</h4>
                     </div>
                   </button>
                 </div>
@@ -169,33 +205,81 @@ const WalletView: React.FC = () => {
                       </div>
                       <p className="text-xs font-black text-green-950 uppercase tracking-[0.5em]">Network: ISOLATED</p>
                     </motion.div>
-                  ) : connectionStep === 'KEY_REVEAL' ? (
+                  ) : connectionStep === 'GEN_CHOICE' ? (
+                    <motion.div 
+                      key="choice"
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="flex flex-col items-center gap-6 relative z-10 w-full"
+                    >
+                      <div className="w-16 h-16 bg-black border-2 border-[#39ff14] rounded-2xl flex items-center justify-center text-[#39ff14] mb-4">
+                        <Shield size={32} />
+                      </div>
+                      <h3 className="text-xl font-black radium-text uppercase italic tracking-tighter">Seed Complexity</h3>
+                      <div className="grid grid-cols-1 gap-4 w-full">
+                        <button 
+                          onClick={() => generateMnemonic(12)}
+                          className="p-6 bg-green-950/20 border border-green-900/30 rounded-2xl flex justify-between items-center group hover:border-[#39ff14] transition-all"
+                        >
+                          <div className="text-left">
+                            <p className="text-sm font-black text-white uppercase">12 Word Seed</p>
+                            <p className="text-[9px] font-bold text-slate-500 uppercase">Standard Security</p>
+                          </div>
+                          <ArrowRight className="text-green-900 group-hover:text-[#39ff14]" size={16} />
+                        </button>
+                        <button 
+                          onClick={() => generateMnemonic(24)}
+                          className="p-6 bg-cyan-950/20 border border-cyan-900/30 rounded-2xl flex justify-between items-center group hover:border-cyan-400 transition-all"
+                        >
+                          <div className="text-left">
+                            <p className="text-sm font-black text-white uppercase">24 Word Seed</p>
+                            <p className="text-[9px] font-bold text-slate-500 uppercase">Maximum Neural Entropy</p>
+                          </div>
+                          <ArrowRight className="text-cyan-900 group-hover:text-cyan-400" size={16} />
+                        </button>
+                      </div>
+                      <button onClick={() => setConnectionStep('IDLE')} className="text-[9px] font-black text-slate-600 uppercase hover:text-white transition-colors">Go Back</button>
+                    </motion.div>
+                  ) : connectionStep === 'SEED_REVEAL' ? (
                     <motion.div 
                       key="reveal"
                       initial={{ opacity: 0, scale: 0.9 }}
                       animate={{ opacity: 1, scale: 1 }}
-                      className="flex flex-col items-center gap-6 relative z-10 w-full"
+                      className="flex flex-col items-center gap-4 relative z-10 w-full max-h-[450px] overflow-hidden"
                     >
-                      <div className="w-20 h-20 bg-green-950/30 border-2 border-[#39ff14] rounded-2xl flex items-center justify-center text-[#39ff14] radium-glow mb-4">
-                        <Key size={32} />
+                      <div className="w-12 h-12 bg-green-950/30 border-2 border-[#39ff14] rounded-xl flex items-center justify-center text-[#39ff14] radium-glow shrink-0">
+                        <Key size={24} />
                       </div>
-                      <div className="space-y-4 w-full">
-                        <h3 className="text-xl font-black radium-text uppercase italic tracking-tighter">Identity Signature Ready</h3>
-                        <div className="bg-black/80 border border-[#39ff14]/30 p-6 rounded-2xl relative group">
-                           <p className="text-[8px] font-black text-[#39ff14]/50 uppercase tracking-widest mb-2">Secure Private Key (Copy & Save)</p>
-                           <p className="text-xs font-black text-white mono break-all leading-relaxed">{privateKey}</p>
-                           <div className="absolute inset-0 bg-black blur-sm group-hover:blur-none transition-all flex items-center justify-center cursor-help">
-                              <p className="text-[10px] font-black text-[#39ff14] uppercase tracking-[0.3em]">Hover to Reveal</p>
+                      <div className="space-y-4 w-full overflow-hidden flex flex-col">
+                        <div className="text-center">
+                          <h3 className="text-lg font-black radium-text uppercase italic tracking-tighter">Back-up Your Neural Seed</h3>
+                          <p className="text-[8px] font-bold text-slate-500 uppercase tracking-widest mt-1">Status: PRIVATE KEY GENERATED</p>
+                        </div>
+                        
+                        <div className="bg-black/90 border border-[#39ff14]/30 p-4 rounded-2xl relative group overflow-y-auto max-h-[220px] custom-scroll">
+                           <div className={`grid ${phraseLength === 12 ? 'grid-cols-3' : 'grid-cols-4'} gap-2`}>
+                              {mnemonic.map((word, i) => (
+                                <div key={i} className="bg-slate-900/50 p-2 rounded-lg border border-slate-800 text-center">
+                                  <span className="text-[8px] font-black text-slate-600 block mb-0.5">{i + 1}</span>
+                                  <span className="text-[10px] font-bold text-white mono">{word}</span>
+                                </div>
+                              ))}
+                           </div>
+                           <div className="absolute inset-0 bg-black/95 blur-md group-hover:opacity-0 transition-all duration-500 flex flex-col items-center justify-center cursor-none z-50 pointer-events-none group-hover:pointer-events-none">
+                              <Lock size={20} className="text-[#39ff14] mb-2" />
+                              <p className="text-[10px] font-black text-[#39ff14] uppercase tracking-[0.3em]">Hover to Reveal Phrase</p>
                            </div>
                         </div>
-                        <p className="text-[9px] text-red-900 font-black uppercase tracking-widest leading-loose">
-                          ⚠ WARNING: LOSING THIS KEY MEANS PERMANENT LOSS OF NEURAL ASSETS. NO RECOVERY POSSIBLE ONCE LINKED.
+
+                        <p className="text-[8px] text-red-500 font-black uppercase tracking-widest leading-tight text-center px-4">
+                          ⚠ WARNING: IF YOU LOSE THESE {phraseLength} WORDS, YOU LOSE ACCESS TO THE HUB PERMANENTLY.
                         </p>
+
                         <button 
                           onClick={finalizeConnection}
                           className="w-full bg-[#39ff14] text-black font-black py-4 rounded-xl hover:bg-white transition-all uppercase tracking-widest text-[10px] shadow-[0_0_20px_rgba(57,255,20,0.4)]"
                         >
-                          I Have Saved My Neural Seed
+                          I Have Recorded the Sequence
                         </button>
                       </div>
                     </motion.div>

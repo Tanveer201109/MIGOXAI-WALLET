@@ -5,9 +5,10 @@ import { Shield, Zap, Globe, Cpu, UserPlus, LogIn, Mail } from 'lucide-react';
 
 interface HomeViewProps {
   onLogin: () => void;
+  onLegal: () => void;
 }
 
-const HomeView: React.FC<HomeViewProps> = ({ onLogin }) => {
+const HomeView: React.FC<HomeViewProps> = ({ onLogin, onLegal }) => {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-6 relative overflow-hidden bg-black/40">
       {/* Background Decorative Elements */}
@@ -109,6 +110,12 @@ const HomeView: React.FC<HomeViewProps> = ({ onLogin }) => {
              <span className="text-[8px] font-black text-slate-600 uppercase tracking-[0.5em]">System ID: NODE-882-X</span>
            </div>
            <div className="flex gap-4">
+             <span 
+               onClick={onLegal}
+               className="text-[8px] font-black text-slate-800 uppercase tracking-widest hover:text-[#39ff14] cursor-pointer transition-colors"
+             >
+               Legal & Policy
+             </span>
              <span className="text-[8px] font-black text-slate-800 uppercase tracking-widest hover:text-[#39ff14] cursor-pointer transition-colors">Manifesto</span>
              <span className="text-[8px] font-black text-slate-800 uppercase tracking-widest hover:text-[#39ff14] cursor-pointer transition-colors">Gateway</span>
            </div>

@@ -10,7 +10,8 @@ export enum AppView {
   WALLET = 'wallet',
   RPC_ENDPOINTS = 'rpc_endpoints',
   ADMIN = 'admin',
-  HOME = 'home'
+  HOME = 'home',
+  LEGAL = 'legal'
 }
 
 export interface ChatMessage {

@@ -11,6 +11,7 @@ import AudioTranscribeView from './components/AudioTranscribeView';
 import WalletView from './components/WalletView';
 import RpcEndpointsView from './components/RpcEndpointsView';
 import AdminPanelView from './components/AdminPanelView';
+import LegalView from './components/LegalView';
 import HomeView from './components/HomeView';
 
 const App: React.FC = () => {
@@ -27,6 +28,7 @@ const App: React.FC = () => {
     { id: AppView.VIDEO_ANALYZE, label: 'Insight Node', icon: '📽️' },
     { id: AppView.AUDIO_TRANSCRIBE, label: 'Audio Sync', icon: '📝' },
     { id: AppView.MAPS, label: 'Geo-Ground', icon: '📍' },
+    { id: AppView.LEGAL, label: 'Legal Node', icon: '⚖️' },
   ];
 
   const renderView = () => {
@@ -41,13 +43,14 @@ const App: React.FC = () => {
       case AppView.AUDIO_TRANSCRIBE: return <AudioTranscribeView />;
       case AppView.CHAT: return <ChatBotView />;
       case AppView.MAPS: return <MapsGroundingView />;
-      case AppView.HOME: return <HomeView onLogin={() => setActiveView(AppView.ADMIN)} />;
+      case AppView.LEGAL: return <LegalView />;
+      case AppView.HOME: return <HomeView onLogin={() => setActiveView(AppView.ADMIN)} onLegal={() => setActiveView(AppView.LEGAL)} />;
       default: return <AdminPanelView />;
     }
   };
 
   if (activeView === AppView.HOME) {
-    return <HomeView onLogin={() => setActiveView(AppView.ADMIN)} />;
+    return <HomeView onLogin={() => setActiveView(AppView.ADMIN)} onLegal={() => setActiveView(AppView.LEGAL)} />;
   }
 
   return (

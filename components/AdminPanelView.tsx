@@ -7,6 +7,7 @@ const AdminPanelView: React.FC = () => {
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [passcode, setPasscode] = useState('');
   const [isHandshaking, setIsHandshaking] = useState(false);
+  const [isFlushing, setIsFlushing] = useState(false);
   const [handshakeStep, setHandshakeStep] = useState(0);
   const [error, setError] = useState('');
   const [showPasscode, setShowPasscode] = useState(false);
@@ -61,6 +62,13 @@ const AdminPanelView: React.FC = () => {
       }
       setIsHandshaking(false);
     }, 1800);
+  };
+
+  const handleFlush = () => {
+    setIsFlushing(true);
+    setTimeout(() => {
+      setIsFlushing(false);
+    }, 1500);
   };
 
   const StatCard = ({ label, value, sub, icon: Icon, color = "text-[#39ff14]" }: any) => (
@@ -221,7 +229,7 @@ const AdminPanelView: React.FC = () => {
             <div className="bg-black/80 border border-green-900/40 px-6 py-3 rounded-xl flex items-center gap-3 radium-glow">
               <Activity size={12} className="text-[#39ff14]" />
               <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Integrity</span>
-              <span className="text-xs font-black text-[#39ff14] mono">ANS=CORRECT</span>
+              <span className="text-xs font-black text-[#39ff14] mono">ANS=AUTOMATIC-CORRECTED</span>
             </div>
             <button 
               onClick={() => {
@@ -290,13 +298,19 @@ const AdminPanelView: React.FC = () => {
                 </button>
              </div>
 
-             <div className="bg-black/40 p-5 rounded-2xl border border-green-900/10 flex items-center justify-between group cursor-pointer hover:bg-red-500/5 transition-all">
+             <div 
+               onClick={handleFlush}
+               className="bg-black/40 p-5 rounded-2xl border border-green-900/10 flex items-center justify-between group cursor-pointer hover:bg-red-500/5 transition-all"
+             >
                 <div>
                   <p className="text-sm font-black text-white uppercase tracking-tight">Flush Node Buffer</p>
-                  <p className="text-[9px] font-black text-red-900 uppercase">Immediate Cache Clear</p>
+                  <p className="text-[9px] font-black text-red-900 uppercase">{isFlushing ? 'PURGING NEURAL CACHE...' : 'Immediate Cache Clear'}</p>
                 </div>
-                <button className="bg-red-950/20 border border-red-900/40 text-red-500 text-[9px] font-black px-4 py-2 rounded-lg hover:bg-red-600 hover:text-white transition-all">
-                  FLUSH
+                <button 
+                  disabled={isFlushing}
+                  className={`bg-red-950/20 border border-red-900/40 text-red-500 text-[9px] font-black px-4 py-2 rounded-lg transition-all ${isFlushing ? 'opacity-50 animate-pulse' : 'hover:bg-red-600 hover:text-white'}`}
+                >
+                  {isFlushing ? 'BUSY' : 'FLUSH'}
                 </button>
              </div>
            </div>
@@ -322,7 +336,7 @@ const AdminPanelView: React.FC = () => {
                </h3>
                <span className="text-[8px] font-bold bg-[#39ff14]/10 text-[#39ff14] px-2 py-0.5 rounded border border-[#39ff14]/20 uppercase">Real-time</span>
              </div>
-             <span className="text-[9px] font-black text-slate-600 mono uppercase tracking-widest">Global Status: ANS=CORRECT</span>
+             <span className="text-[9px] font-black text-slate-600 mono uppercase tracking-widest">Global Status: ANS=AUTOMATIC-CORRECTED</span>
            </div>
            
            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

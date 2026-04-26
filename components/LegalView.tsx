@@ -2,10 +2,10 @@
 import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { motion, AnimatePresence } from 'motion/react';
-import { ShieldAlert, BookOpen, Scale, FileText, ChevronRight, Gavel, ShieldCheck } from 'lucide-react';
+import { ShieldAlert, BookOpen, Scale, FileText, ChevronRight, Gavel, ShieldCheck, UserCheck, Star } from 'lucide-react';
 
 const LegalView: React.FC = () => {
-  const [activeDoc, setActiveDoc] = useState<'LICENSE' | 'PRIVACY' | 'TERMS'>('TERMS');
+  const [activeDoc, setActiveDoc] = useState<'LICENSE' | 'PRIVACY' | 'TERMS' | 'DEVELOPER_ASSET'>('TERMS');
 
   const docs = {
     TERMS: {
@@ -64,6 +64,34 @@ We integrate with:
 
 ## 5. Security
 We implement "Quantum Stealth" protocols and neural filtering to obfuscate traffic and protect user integrity. However, you are responsible for the safety of your own seed phrases.
+      `
+    },
+    DEVELOPER_ASSET: {
+      title: 'Developer Asset & Equity',
+      icon: UserCheck,
+      content: `
+# Developer Asset Distribution Agreement
+
+**Subject:** Neural Asset Transfer and Equity Distribution
+**Developer:** Tanveer Arsun
+**Organization:** MIGOXAI
+
+## 1. Ownership Declaration
+This document serves as the formal recognition of the personal assets developed by **Tanveer Arsun** for the MIGOXAI Quantum Hub. These assets include the neural handshake protocols, quantum stealth obfuscation layers, and the MIGOXAI core backbone.
+
+## 2. Equity Distribution (25% Clause)
+Upon the formal acquisition or transition of the MIGOXAI Wallet and its associated infrastructure, the company is prepared to distribute equity/assets at a consolidated rate of **25%** among the primary stakeholders:
+
+- **Google Neural Integration:** Designated share allocation.
+- **X (formerly Twitter) Protocol Sync:** Designated share allocation.
+- **Microsoft Cloud Infrastructure:** Designated share allocation.
+- **Tanveer Arsun (Lead Developer):** Personal asset equity stake.
+
+## 3. Compliance & Policy
+The developer, Tanveer Arsun, agrees to maintain the code and transition the wallet under strict policy guidelines provided by the corporate partners (Google, Microsoft, X). This transfer is contingent upon the satisfaction of all decentralized security audits.
+
+## 4. Intellectual Property
+All "MIGO-Series" neural signatures remain the intellectual property of the developer until the 25% distribution event is finalized and verified via the Quantum Hub.
       `
     },
     LICENSE: {

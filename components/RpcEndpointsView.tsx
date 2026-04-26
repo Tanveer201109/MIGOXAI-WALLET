@@ -27,20 +27,40 @@ const DEFAULT_NODES: RpcNode[] = [
     url: 'https://migoxai-9160f6ed.gateway.tatum.io/', 
     gateway: 'TATUM', 
     apiKey: 't-6989e9664f6f4e3435d62281-0ac21b66ba86486489bbca7f',
-    latency: 12, 
+    latency: 8, 
     status: 'ONLINE', 
-    version: 'v4.4.0-SECURE', 
+    version: 'v4.6.0-SECURE', 
     isUserOwned: true,
     isPrimary: true 
   },
   { 
+    id: 'google-chain-01', 
+    name: 'Google Cloud Relay', 
+    url: 'https://google-chain.migoxai.io/rpc/v1', 
+    gateway: 'GOOGLE', 
+    latency: 14, 
+    status: 'ONLINE', 
+    version: 'v1.2-CLOUD', 
+    isUserOwned: false 
+  },
+  { 
+    id: 'microsoft-node-01', 
+    name: 'Azure Microsoft Node', 
+    url: 'https://microsoft-chain.migoxai.io/rpc/v1', 
+    gateway: 'MICROSOFT', 
+    latency: 18, 
+    status: 'ONLINE', 
+    version: 'v1.5-AZURE', 
+    isUserOwned: false 
+  },
+  { 
     id: 'xai-01', 
-    name: 'Neural Hub Node', 
-    url: 'https://rpc.migoxai.io', 
+    name: 'X-Chain Neural Hub', 
+    url: 'https://x-chain.migoxai.io/rpc', 
     gateway: 'XAI-NET', 
     latency: 12, 
     status: 'ONLINE', 
-    version: 'v2.1', 
+    version: 'v2.1-NEURAL', 
     isUserOwned: false 
   },
 ];
@@ -134,9 +154,9 @@ const RpcEndpointsView: React.FC<RpcEndpointsViewProps> = ({ onBack }) => {
               + Register New Node
             </button>
             <div className="bg-black/80 border border-[#39ff14]/30 px-6 py-3 rounded-xl radium-glow flex items-center gap-4">
-              <span className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em]">Integrity:</span>
+              <span className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em]">Neural Status:</span>
               <span className="text-sm font-black mono text-[#39ff14] animate-pulse">
-                {integrityStatus}
+                ANS=AUTOMATIC-CORRECTED
               </span>
             </div>
           </div>

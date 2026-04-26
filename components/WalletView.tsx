@@ -24,16 +24,17 @@ const WalletView: React.FC = () => {
   const [balance] = useState({
     btc: "1.245082",
     xai: "250,450.00",
+    goai: "500,000.00",
+    microai: "1,200,000.00",
     xchain: "882,400.00",
-    micro: "1,000,000.00",
-    usd: "142,654.20"
+    usd: "182,450.20"
   });
 
   const tokens = [
-    { name: "X-CHAIN", symbol: "XCH", amount: balance.xchain, value: "$32,120.45", color: "text-cyan-400", icon: "⛓️", glow: "shadow-[0_0_15px_rgba(34,211,238,0.4)]" },
-    { name: "MIGOXAI", symbol: "XAI", amount: balance.xai, value: "$12,450.15", color: "text-[#39ff14]", icon: "💎", glow: "shadow-[0_0_15px_rgba(57,255,20,0.4)]" },
-    { name: "Bitcoin", symbol: "BTC", amount: balance.btc, value: "$84,210.00", color: "text-orange-500", icon: "₿", glow: "" },
-    { name: "JUST-MICRO", symbol: "MICRO", amount: balance.micro, value: "$1,761.00", color: "text-blue-400", icon: "Ⓜ️", glow: "" },
+    { name: "xAi", symbol: "xAI", chain: "X-Chain", amount: balance.xai, value: "$22,450.15", color: "text-[#39ff14]", icon: "🧠", glow: "shadow-[0_0_15px_rgba(57,255,20,0.4)]", contract: "0x882...xAi" },
+    { name: "GOAI", symbol: "GOAI", chain: "Google Chain", amount: balance.goai, value: "$45,210.00", color: "text-white", icon: "G", glow: "shadow-[0_0_10px_white]", contract: "0xG0A...Chain" },
+    { name: "MiCROAI", symbol: "MAI", chain: "Microsoft Chain", amount: balance.microai, value: "$28,761.00", color: "text-blue-400", icon: "⊞", glow: "shadow-[0_0_10px_rgba(96,165,250,0.4)]", contract: "0xMSFT...Core" },
+    { name: "Bitcoin", symbol: "BTC", chain: "Legacy", amount: balance.btc, value: "$84,210.00", color: "text-orange-500", icon: "₿", glow: "", contract: "Native" },
   ];
 
   const transactions = [
@@ -407,8 +408,8 @@ const WalletView: React.FC = () => {
               </div>
               <div className="mt-8">
                  <div className="flex justify-between items-end mb-2">
-                   <span className="text-[10px] font-black text-green-900 uppercase">Integrity</span>
-                   <span className="text-[10px] font-black radium-text mono">ANS=CORRECT</span>
+                   <span className="text-[10px] font-black text-green-900 uppercase">Integrity Status</span>
+                   <span className="text-[10px] font-black radium-text mono">ANS=AUTOMATIC-CORRECTED</span>
                  </div>
                  <div className="w-full bg-slate-900 h-2 rounded-full overflow-hidden border border-green-900/20">
                     <div className="bg-[#39ff14] h-full w-[100%] shadow-[0_0_10px_#39ff14]"></div>
@@ -436,7 +437,12 @@ const WalletView: React.FC = () => {
                       </div>
                       <div>
                         <h4 className="font-black text-white text-xl tracking-tighter">{token.name}</h4>
-                        <p className="text-[10px] font-bold text-slate-600 uppercase tracking-widest">{token.symbol}</p>
+                        <div className="flex items-center gap-2">
+                          <p className="text-[10px] font-bold text-slate-600 uppercase tracking-widest">{token.symbol}</p>
+                          <span className="w-1 h-1 rounded-full bg-slate-800" />
+                          <p className="text-[8px] font-black text-slate-500 uppercase tracking-[0.2em]">{token.chain}</p>
+                        </div>
+                        <p className="text-[7px] font-mono text-slate-700 mt-1 opacity-60">Contract: {token.contract}</p>
                       </div>
                     </div>
                     <div className="text-right relative z-10">
@@ -542,10 +548,15 @@ const WalletView: React.FC = () => {
              <h3 className="text-2xl font-black text-cyan-400 uppercase italic tracking-tighter mb-10 text-center">X-Chain Bridge Tunnel</h3>
              
              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
-                <div className="bg-black/80 p-6 rounded-2xl border border-cyan-900/30 text-center">
+                <div className="bg-black/80 p-6 rounded-2xl border border-cyan-900/30 text-center relative group">
                   <p className="text-[10px] font-black text-slate-500 uppercase mb-4">Source Network</p>
-                  <div className="text-4xl mb-4">🌍</div>
-                  <p className="font-black text-white uppercase tracking-widest">Mainnet Core</p>
+                  <div className="text-4xl mb-4 group-hover:scale-110 transition-transform">🌍</div>
+                  <select className="bg-transparent text-white font-black uppercase tracking-widest outline-none text-center appearance-none">
+                    <option value="MAINNET" className="bg-black">Mainnet Core</option>
+                    <option value="GOOGLE" className="bg-black">Google Chain</option>
+                    <option value="X-CHAIN" className="bg-black">X-Chain</option>
+                    <option value="MICROSOFT" className="bg-black">Microsoft Chain</option>
+                  </select>
                 </div>
                 
                 <div className="flex flex-col items-center gap-4">
@@ -556,10 +567,15 @@ const WalletView: React.FC = () => {
                   <div className="w-full h-px bg-gradient-to-r from-transparent via-cyan-500 to-transparent"></div>
                 </div>
 
-                <div className="bg-black/80 p-6 rounded-2xl border border-cyan-900/30 text-center">
+                <div className="bg-black/80 p-6 rounded-2xl border border-cyan-900/30 text-center relative group">
                   <p className="text-[10px] font-black text-slate-500 uppercase mb-4">Destination</p>
-                  <div className="text-4xl mb-4">🧬</div>
-                  <p className="font-black text-cyan-400 uppercase tracking-widest">X-Chain Node</p>
+                  <div className="text-4xl mb-4 group-hover:scale-110 transition-transform">🧬</div>
+                  <select className="bg-transparent text-cyan-400 font-black uppercase tracking-widest outline-none text-center appearance-none">
+                    <option value="GOOGLE" className="bg-black">Google Chain Hub</option>
+                    <option value="X-CHAIN" className="bg-black">X-Chain Node</option>
+                    <option value="MICROSOFT" className="bg-black">Microsoft Chain</option>
+                  </select>
+                  <div className="text-[7px] text-cyan-800 font-bold mt-2">SECURE GATEWAY: ANS=AUTOMATIC</div>
                 </div>
              </div>
 
@@ -568,9 +584,10 @@ const WalletView: React.FC = () => {
                  <p className="text-[10px] font-black text-slate-500 uppercase mb-4">Amount to Bridge</p>
                  <div className="flex justify-between items-center">
                    <input type="text" placeholder="0.00" className="bg-transparent text-3xl font-black text-white focus:outline-none w-1/2 mono" />
-                   <select className="bg-slate-900 text-xs font-black p-2 rounded-xl border border-slate-800 outline-none">
-                     <option>XCH</option>
-                     <option>XAI</option>
+                   <select className="bg-slate-900 text-[10px] font-black p-2 rounded-xl border border-slate-800 outline-none text-[#39ff14]">
+                     <option>xAI</option>
+                     <option>GOAI</option>
+                     <option>MAI</option>
                      <option>BTC</option>
                    </select>
                  </div>
@@ -593,53 +610,106 @@ const WalletView: React.FC = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 h-full">
             <div className="glass-panel p-12 rounded-[3rem] border border-[#39ff14]/20 bg-black/60 flex flex-col justify-between">
               <div>
-                <h3 className="text-2xl font-black radium-text uppercase italic tracking-tighter mb-4">Neural Growth Node</h3>
-                <p className="text-slate-500 text-sm font-bold uppercase tracking-widest mb-10">Earn rewards by securing the MIGOXAI backbone.</p>
-                
-                <div className="grid grid-cols-2 gap-6 mb-10">
-                  <div className="bg-slate-900/40 p-6 rounded-2xl border border-green-900/20">
-                    <p className="text-[10px] font-black text-slate-500 uppercase mb-2">Current APY</p>
-                    <p className="text-4xl font-black radium-text mono">24.5%</p>
+                <div className="flex justify-between items-center mb-10">
+                  <div>
+                    <h3 className="text-3xl font-black radium-text uppercase italic tracking-tighter mb-2">Neural Staking</h3>
+                    <p className="text-slate-500 text-[10px] font-black uppercase tracking-[0.4em]">Engine v4.6 // Yield Optimizer</p>
                   </div>
-                  <div className="bg-slate-900/40 p-6 rounded-2xl border border-green-900/20">
-                    <p className="text-[10px] font-black text-slate-500 uppercase mb-2">Total Staked</p>
-                    <p className="text-4xl font-black text-white mono">1.2M XAI</p>
+                  <div className="w-12 h-12 bg-[#39ff14]/10 border border-[#39ff14]/30 rounded-xl flex items-center justify-center text-[#39ff14]">
+                    <Zap size={24} />
+                  </div>
+                </div>
+                
+                <div className="bg-black/80 p-8 rounded-[2rem] border border-green-900/30 mb-8">
+                   <p className="text-[10px] font-black text-slate-500 uppercase mb-4">Amount to Stake</p>
+                   <div className="flex justify-between items-center mb-6">
+                     <input 
+                      type="text" 
+                      placeholder="0.00" 
+                      className="bg-transparent text-5xl font-black text-white focus:outline-none w-2/3 mono tracking-tighter" 
+                     />
+                     <div className="bg-slate-900 px-4 py-2 rounded-xl flex items-center gap-2 border border-slate-800">
+                       <span className="text-2xl">🧠</span>
+                       <span className="font-black text-xs">xAI</span>
+                     </div>
+                   </div>
+                   <div className="flex gap-2">
+                     {['25%', '50%', '75%', 'MAX'].map(pct => (
+                       <button key={pct} className="flex-1 py-2 bg-green-950/20 border border-green-900/20 rounded-lg text-[9px] font-black text-slate-500 hover:text-[#39ff14] hover:border-[#39ff14] transition-all uppercase">
+                         {pct}
+                       </button>
+                     ))}
+                   </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-6">
+                  <div className="bg-slate-900/40 p-6 rounded-2xl border border-green-900/20 group hover:border-[#39ff14]/30 transition-all">
+                    <p className="text-[10px] font-black text-slate-500 uppercase mb-2">Live APY</p>
+                    <p className="text-4xl font-black radium-text mono">32.8%</p>
+                    <p className="text-[8px] font-bold text-green-900 mt-2">Neural Boost: ACTIVE</p>
+                  </div>
+                  <div className="bg-slate-900/40 p-6 rounded-2xl border border-green-900/20 group hover:border-blue-500/30 transition-all">
+                    <p className="text-[10px] font-black text-slate-500 uppercase mb-2">Network Stake</p>
+                    <p className="text-4xl font-black text-white mono">4.8M xAI</p>
+                    <p className="text-[8px] font-bold text-slate-600 mt-2">Security Rank: TOP 1%</p>
                   </div>
                 </div>
               </div>
 
-              <div className="space-y-6">
-                <div className="flex justify-between items-center bg-black/40 p-4 rounded-xl border border-green-900/10">
-                  <span className="text-xs font-bold text-slate-400">Lock Period</span>
-                  <span className="text-xs font-black text-[#39ff14]">FLEXIBLE</span>
+              <div className="mt-10 space-y-4">
+                <div className="flex justify-between items-center px-4">
+                  <span className="text-[10px] font-black text-slate-600 uppercase tracking-widest">Protocol Fee</span>
+                  <span className="text-[10px] font-black text-white mono">0.00%</span>
                 </div>
                 <button 
                   onClick={handleAction}
-                  className="w-full bg-[#39ff14] text-black font-black py-6 rounded-2xl hover:bg-white transition-all uppercase tracking-[0.2em] text-sm shadow-[0_0_30px_rgba(57,255,20,0.4)]"
+                  disabled={isProcessing}
+                  className="w-full bg-[#39ff14] text-black font-black py-6 rounded-2xl hover:bg-white transition-all uppercase tracking-[0.2em] text-sm shadow-[0_0_30px_rgba(57,255,20,0.4)] disabled:opacity-50"
                 >
-                  DEPOSIT TO NODE
+                  {isProcessing ? 'SYNCHRONIZING GROWTH NODE...' : 'DEPOSIT TO NEURAL HUB'}
                 </button>
               </div>
             </div>
 
             <div className="glass-panel p-12 rounded-[4rem] border border-slate-800 bg-black/40 flex flex-col">
-              <h3 className="text-xs font-black text-slate-500 uppercase tracking-[0.4em] mb-10">Yield Projection</h3>
+              <div className="flex justify-between items-center mb-10">
+                <h3 className="text-xs font-black text-slate-500 uppercase tracking-[0.4em]">Yield Velocity Projection</h3>
+                <div className="bg-black border border-green-900/20 px-3 py-1 rounded-full flex items-center gap-2">
+                  <div className="w-1.5 h-1.5 bg-[#39ff14] rounded-full animate-pulse" />
+                  <span className="text-[8px] font-black text-slate-500 uppercase">ANS=REALTIME</span>
+                </div>
+              </div>
+              
               <div className="flex-1 flex flex-col gap-6">
                 {[
-                  { time: '30 DAYS', yield: '+2.4k XAI', status: 'ESTIMATED' },
-                  { time: '90 DAYS', yield: '+7.8k XAI', status: 'ESTIMATED' },
-                  { time: '1 YEAR', yield: '+32.4k XAI', status: 'ESTIMATED' },
+                  { time: '30 DAYS', yield: '+2,450 xAI', value: '+$218.40', color: 'text-white' },
+                  { time: '90 DAYS', yield: '+7,820 xAI', value: '+$694.00', color: 'text-white' },
+                  { time: '1 YEAR', yield: '+34,120 xAI', value: '+$3,024.15', color: 'text-white' },
                 ].map((row, i) => (
-                  <div key={i} className="flex justify-between items-center p-6 bg-slate-900/20 border border-white/5 rounded-2xl group hover:border-[#39ff14]/20 transition-all">
+                  <motion.div 
+                    key={i} 
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: i * 0.1 }}
+                    className="flex justify-between items-center p-8 bg-slate-900/20 border border-white/5 rounded-[2rem] group hover:border-[#39ff14]/40 hover:bg-black transition-all"
+                  >
                     <div>
-                      <p className="text-[10px] font-black text-slate-600 uppercase mb-1">{row.time}</p>
-                      <p className="text-2xl font-black text-white mono">{row.yield}</p>
+                      <p className="text-[10px] font-black text-slate-600 uppercase tracking-widest mb-2">{row.time}</p>
+                      <p className="text-3xl font-black text-white mono group-hover:text-[#39ff14] transition-colors">{row.yield}</p>
                     </div>
-                    <span className="text-[9px] font-black text-green-900 border border-green-950 px-2 py-1 rounded group-hover:text-[#39ff14] group-hover:border-[#39ff14] transition-all">
-                      {row.status}
-                    </span>
-                  </div>
+                    <div className="text-right">
+                      <p className="text-[11px] font-black text-[#39ff14] mono mb-1">{row.value}</p>
+                      <span className="text-[8px] font-black text-green-900 border border-green-950 px-2 py-0.5 rounded uppercase">Estimated</span>
+                    </div>
+                  </motion.div>
                 ))}
+
+                <div className="mt-auto p-8 border-2 border-dashed border-green-900/10 rounded-3xl relative overflow-hidden group">
+                  <div className="absolute inset-0 bg-[#39ff14]/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <p className="text-[9px] font-black text-slate-700 uppercase tracking-widest leading-relaxed text-center">
+                    Yield is compounded every neural cycle (approx. 4.2 seconds). Projections are simulated based on current network load and may vary.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
@@ -648,7 +718,7 @@ const WalletView: React.FC = () => {
       
       <footer className="flex justify-between items-center py-6 px-4 border-t border-green-900/10 mt-auto">
         <p className="text-[10px] font-black text-green-950 uppercase tracking-[0.5em] animate-pulse">
-          MIGOXAI SECURE QUANTUM HUB ACTIVE // X-CHAIN TUNNEL: ANS=CORRECT
+          MIGOXAI SECURE QUANTUM HUB ACTIVE // X-CHAIN TUNNEL: ANS=AUTOMATIC-CORRECTED
         </p>
         <div className="flex gap-10 text-[10px] font-black text-slate-700 uppercase">
           <span className="radium-text">Security: MAXIMUM</span>

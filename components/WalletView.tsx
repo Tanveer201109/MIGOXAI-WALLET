@@ -26,6 +26,7 @@ const WalletView: React.FC = () => {
     xai: "250,450.00",
     goai: "500,000.00",
     microai: "1,200,000.00",
+    metasplash: "88,400.00",
     xchain: "882,400.00",
     eth: "12.45",
     sol: "450.20",
@@ -35,6 +36,7 @@ const WalletView: React.FC = () => {
 
   const tokens = [
     { name: "xAi", symbol: "xAI", chain: "X-Chain", amount: balance.xai, value: "$22,450.15", color: "text-[#39ff14]", icon: "🧠", glow: "shadow-[0_0_15px_rgba(57,255,20,0.4)]", contract: "0x882...xAi" },
+    { name: "MetaSplash", symbol: "MSPL", chain: "Meta Chain", amount: balance.metasplash, value: "$7,820.45", color: "text-pink-500", icon: "♾️", glow: "shadow-[0_0_15px_rgba(236,72,153,0.4)]", contract: "0xMETA...Splash" },
     { name: "GOAI", symbol: "GOAI", chain: "Google Chain", amount: balance.goai, value: "$45,210.00", color: "text-white", icon: "G", glow: "shadow-[0_0_10px_white]", contract: "0xG0A...Chain" },
     { name: "MiCROAI", symbol: "MAI", chain: "Microsoft Chain", amount: balance.microai, value: "$28,761.00", color: "text-blue-400", icon: "⊞", glow: "shadow-[0_0_10px_rgba(96,165,250,0.4)]", contract: "0xMSFT...Core" },
     { name: "Ethereum", symbol: "ETH", chain: "Mainnet", amount: balance.eth, value: "$42,120.00", color: "text-blue-200", icon: "Ξ", glow: "", contract: "0x742...Eth" },
@@ -690,6 +692,7 @@ const WalletView: React.FC = () => {
                     <option value="MAINNET" className="bg-black">Mainnet Core</option>
                     <option value="GOOGLE" className="bg-black">Google Chain</option>
                     <option value="X-CHAIN" className="bg-black">X-Chain</option>
+                    <option value="META" className="bg-black">Meta Chain</option>
                     <option value="MICROSOFT" className="bg-black">Microsoft Chain</option>
                   </select>
                 </div>
@@ -708,6 +711,7 @@ const WalletView: React.FC = () => {
                   <select className="bg-transparent text-cyan-400 font-black uppercase tracking-widest outline-none text-center appearance-none">
                     <option value="GOOGLE" className="bg-black">Google Chain Hub</option>
                     <option value="X-CHAIN" className="bg-black">X-Chain Node</option>
+                    <option value="META" className="bg-black">Meta Neural Link</option>
                     <option value="MICROSOFT" className="bg-black">Microsoft Chain</option>
                   </select>
                   <div className="text-[7px] text-cyan-800 font-bold mt-2">SECURE GATEWAY: ANS=AUTOMATIC</div>
@@ -721,6 +725,7 @@ const WalletView: React.FC = () => {
                    <input type="text" placeholder="0.00" className="bg-transparent text-3xl font-black text-white focus:outline-none w-1/2 mono" />
                    <select className="bg-slate-900 text-[10px] font-black p-2 rounded-xl border border-slate-800 outline-none text-[#39ff14]">
                      <option>xAI</option>
+                     <option>MSPL</option>
                      <option>GOAI</option>
                      <option>MAI</option>
                      <option>BTC</option>

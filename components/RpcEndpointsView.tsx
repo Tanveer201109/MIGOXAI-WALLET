@@ -5,7 +5,7 @@ interface RpcNode {
   id: string;
   name: string;
   url: string;
-  gateway: 'GOOGLE' | 'MICROSOFT' | 'XAI-NET' | 'CUSTOM' | 'TATUM';
+  gateway: 'GOOGLE' | 'MICROSOFT' | 'XAI-NET' | 'CUSTOM' | 'TATUM' | 'META-AI';
   latency: number;
   status: 'ONLINE' | 'OFFLINE' | 'SYNCING';
   version: string;
@@ -61,6 +61,16 @@ const DEFAULT_NODES: RpcNode[] = [
     latency: 12, 
     status: 'ONLINE', 
     version: 'v2.1-NEURAL', 
+    isUserOwned: false 
+  },
+  { 
+    id: 'meta-rpc-01', 
+    name: 'Meta-AI Neural Link', 
+    url: 'https://meta-rpc.migoxai.io/neural-v1', 
+    gateway: 'META-AI', 
+    latency: 9, 
+    status: 'ONLINE', 
+    version: 'v4.2-META', 
     isUserOwned: false 
   },
 ];
